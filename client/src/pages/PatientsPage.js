@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import api from '../services/api';
+import PatientModal from '../components/PatientModal';
 import './PatientsPage.css';
 
 const PatientsPage = () => {
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     fetchPatients();
@@ -15,15 +17,27 @@ const PatientsPage = () => {
     try {
       setLoading(true);
       const response = await api.get('/patients');
-      // For now, use mock data since API is placeholder
-      setPatients(response.data.data || []);
+      setPatients(response.data);
     } catch (err) {
-      setError('Failed to load patients');
-      console.error(err);
+      setError('Failed to load patients from API');
+      console.error('API Error:', err);
     } finally {
       setLoading(false);
     }
   };
+
+  const handleAddPatient = async (patientData) => {
+    try {
+      await api.post('/patients', patientData);
+      await fetchPatients(); // Refresh the list
+    } catch (err) {
+      console.error('Error adding patient:', err);
+      throw err; // Re-throw to let modal handle the error
+    }
+  };
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   if (loading) {
     return (
@@ -50,7 +64,7 @@ const PatientsPage = () => {
     <div className="patients-page">
       <div className="page-header">
         <h1>Patients</h1>
-        <button className="add-patient-btn">Add New Patient</button>
+        <button onClick={openModal} className="add-patient-btn">Add New Patient</button>
       </div>
 
       {patients.length === 0 ? (
@@ -60,7 +74,7 @@ const PatientsPage = () => {
       ) : (
         <div className="patients-grid">
           {patients.map((patient) => (
-            <div key={patient.id} className="patient-card">
+            <div key={patient._id} className="patient-card">
               <h3>{patient.firstName} {patient.lastName}</h3>
               <p>{patient.email}</p>
               <div className="patient-actions">
@@ -71,6 +85,12 @@ const PatientsPage = () => {
           ))}
         </div>
       )}
+
+      <PatientModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onSubmit={handleAddPatient}
+      />
     </div>
   );
 };
