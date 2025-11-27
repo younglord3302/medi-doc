@@ -31,4 +31,9 @@ const patientSchema = new mongoose.Schema({
   timestamps: true
 });
 
+// Database indexes
+patientSchema.index({ lastName: 1 }); // For searching by surname
+patientSchema.index({ email: 1 }); // For email searches
+patientSchema.index({ createdAt: -1 }); // For chronological ordering
+
 module.exports = mongoose.model('Patient', patientSchema);

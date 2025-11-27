@@ -12,10 +12,20 @@
     "build": "cd client && npm run build",
     "start": "cd server && npm start"
   },
-  "keywords": ["medical", "healthcare", "react", "node", "mongodb", "fullstack"],
+  "keywords": [
+    "medical",
+    "healthcare",
+    "react",
+    "node",
+    "mongodb",
+    "fullstack"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^9.0.0"
+  },
+  "dependencies": {
+    "axios": "^1.13.2"
   }
 }

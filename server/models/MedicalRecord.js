@@ -55,4 +55,10 @@ const medicalRecordSchema = new mongoose.Schema({
   timestamps: true
 });
 
+// Database indexes
+medicalRecordSchema.index({ patientId: 1 }); // For finding records by patient
+medicalRecordSchema.index({ doctorId: 1 }); // For finding records by doctor
+medicalRecordSchema.index({ visitDate: -1 }); // For chronological ordering
+medicalRecordSchema.index({ createdAt: -1 }); // For chronological ordering
+
 module.exports = mongoose.model('MedicalRecord', medicalRecordSchema);
