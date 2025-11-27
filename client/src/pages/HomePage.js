@@ -8,17 +8,14 @@ const HomePage = () => {
   const [health, setHealth] = useState(null);
   const [healthError, setHealthError] = useState("");
   const [dashboardData, setDashboardData] = useState(null);
-  const [dashboardError, setDashboardError] = useState("");
   const [loading, setLoading] = useState(true);
 
   const loadDashboardData = useCallback(async () => {
     try {
       const res = await api.get("/auth/dashboard");
       setDashboardData(res.data.data);
-      setDashboardError("");
     } catch (err) {
       console.error("Dashboard data load failed", err);
-      setDashboardError("Failed to load dashboard statistics");
       // Set default values if API fails
       setDashboardData({
         statistics: {
